@@ -17,28 +17,22 @@ public class Main {
 
 	public static void main(String[] args) throws Exception {
 
+		//omit those maps
 		String[] notStocks = { "The-Dustforce-DX-5583", "The-Scrubforce-DX-6018", "The-Difficults-5462", "The-Lab-4563",
 				"The-City-2800", "The-Mansion-5517", "The-Forest-2654", "tutorial0" };
 
 		try {
-			//BufferedReader in = new BufferedReader(new FileReader("records.txt"));
-			//String json = in.readLine();
-			//in.close();
-
 			String json = readUrl("http://dustkid.com/json/records");
 			Gson gson = new Gson();
 
 			Scores oldScores = gson.fromJson(json, Scores.class);
 			Times oldTimes = gson.fromJson(json, Times.class);
 
-			while (true) {
-				//BufferedReader inn = new BufferedReader(new FileReader("records.txt"));
-				//json = inn.readLine();
-				//inn.close();
-				
+			while (true) {		
 				json = readUrl("http://dustkid.com/json/records");
 				gson = new Gson();
 
+				//2 categories - score and time
 				Scores newScores = gson.fromJson(json, Scores.class);
 				Times newTimes = gson.fromJson(json, Times.class);
 
@@ -85,10 +79,12 @@ public class Main {
 
 				oldScores.Scores = newScores.Scores;
 				oldTimes.Times = newTimes.Times;
-
+				
+				//check for new records every 10s
 				Thread.sleep(10000);
 			}
 		} catch (IOException e) {
+			//if dustkid.com doesn't respond wait 60s and try again
 			System.out.println("ReadUrl doesn't work");
 			Thread.sleep(60000);
 			main(null);
@@ -106,6 +102,7 @@ public class Main {
 		Map<String, Level> Times;
 	}
 
+	//creates a string with text contents of provided url
 	private static String readUrl(String urlString) throws Exception {
 		BufferedReader reader = null;
 		try {
@@ -124,6 +121,7 @@ public class Main {
 		}
 	}
 
+	//makes sure the username isn't too long for a twitter message
 	private static String shortenUsername(String userName) {
 		if (userName.length() > 60) {
 			userName = userName.substring(0, 57) + "...";
@@ -131,6 +129,7 @@ public class Main {
 		return userName;
 	}
 
+	//converts time from seconds into a proper format e.g. 1:03.895
 	private static String properTime(double time) {
 		String newTime = "";
 		double remainder = time % 3600;
@@ -147,6 +146,7 @@ public class Main {
 		return newTime;
 	}
 
+	//creates a message for the twitter bot to tweet
 	private static String message(int newUser, int oldUser, String levelname, String newUsername, String oldUsername,
 			double newTime, double oldTime, int newScore_completion, int oldScore_completion, int newScore_finesse,
 			int oldScore_finesse, int character, String category) {
