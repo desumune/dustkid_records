@@ -28,7 +28,7 @@ public class Main {
 			Scores oldScores = gson.fromJson(json, Scores.class);
 			Times oldTimes = gson.fromJson(json, Times.class);
 
-			while (true) {		
+			while (true) {			
 				json = readUrl("http://dustkid.com/json/records");
 				gson = new Gson();
 
@@ -79,7 +79,7 @@ public class Main {
 
 				oldScores.Scores = newScores.Scores;
 				oldTimes.Times = newTimes.Times;
-				
+
 				//check for new records every 10s
 				Thread.sleep(10000);
 			}
